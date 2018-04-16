@@ -5,24 +5,15 @@ from glob import glob
 
 def main():
     imgList = glob('./data/Rainier*.png')
+    panoFileName = '../results/pano_Rainier.jpg'
 
-    # %% Feature detection
-    Descriptor = {}
-    PointInImg = {}
-
-    for path in imgList:
-        img = cv2.imread(path)
-
-
-        # for idx, (key, img) in enumerate(sorted(Images.items())):
-        #     I = np.asarray(img.convert('L')).astype('single')
-        #     [f, d] = sift(I, compute_descriptor=True, float_descriptors=True)
-        #     pointsInImage = swapcolumn(f[:, 0:2])
-        #     PointInImg.update({idx: pointsInImage})
-        #     Descriptor.update({idx: d})
-
-        cv2.imshow(path, img)
-        cv2.waitKey(0)
+    # Read Images
+    Images = {}
+    for idx, imgPath in enumerate(sorted(imgList)):
+        img = cv2.imread(imgPath)
+        Images.update({idx: img})
+        print(idx, imgPath)
+    print('Images loaded. Beginning feature detection...')
 
 
 if __name__ == '__main__':
