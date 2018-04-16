@@ -8,8 +8,8 @@ from glob import glob
 THRESHOLD = 0.7
 
 def main():
-    imgList = glob('./data/Rainier*.png')
-    panoFileName = '../results/pano_Rainier.jpg'
+    imgList = glob('./data/yosemite*.jpg')
+    panoFileName = './result/pano_yosemite.jpg'
 
     # Read Images
     Images = {}
@@ -43,19 +43,52 @@ def main():
 
         # H, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
         H = func.findHomographyRANSAC(src_pts.reshape(-1,2), dst_pts.reshape(-1,2))
-        wrap = cv2.warpPerspective(Images[idx+1], H, (Images[idx+1].shape[1]+Images[idx+1].shape[1] , Images[idx+1].shape[0]+Images[idx+1].shape[0]))
-        # result = cv2.addWeighted(img1, 0.5, wrap, 0.5, 0)
-        wrap[0:Images[idx+1].shape[0], 0:Images[idx+1].shape[1]] = Images[idx]
+        Transform.update({idx+1: H})
 
-        # rows, cols = np.where(wrap[:,:,0] !=0)
-        # min_row, max_row = min(rows), max(rows) +1
-        # min_col, max_col = min(cols), max(cols) +1
-        # result = wrap[min_row:max_row,min_col:max_col,:] # Remove extra blank space
-        result = wrap
-        cv2.imshow('result{}_{}'.format(idx, idx+1),result)
+    # Stitch images
+    pano = Images[0]
+    prev_transfrom = np.identity(3, np.float)
+    for idx in range(1, len(imgList)):
+        H = prev_transfrom.dot(Transform[idx])
+
+        # Find new corners
+        srcImg = Images[idx]
+        corners = np.array([
+            [0, srcImg.shape[1], srcImg.shape[1], 0],
+            [0, 0, srcImg.shape[0], srcImg.shape[0]],
+            [1, 1, 1, 1]
+        ])
+        new_corners = H.dot(corners)
+        new_corners = np.concatenate([(new_corners/new_corners[2])[:2,], ((0,pano.shape[1]),(0,pano.shape[0]))], axis=1)
+
+        # Calculate translation matrix
+        T = np.identity(3, np.float)
+        T[0,2] = -new_corners[0].min()
+        T[1,2] = -new_corners[1].min()
+
+        # Calculate new image size
+        new_size = (int(new_corners[0].max()-new_corners[0].min()), int(new_corners[1].max()-new_corners[1].min()))
+
+        # Warp images
+        warped = cv2.warpPerspective(Images[idx], T.dot(H), new_size)
+        pano = cv2.warpPerspective(pano, T, new_size)
+
+        # Blend image
+        add_mask = np.sum(warped, axis=2) > np.sum(pano, axis=2)
+        for c in range(pano.shape[2]):
+            cur_im = pano[:,:,c]
+            temp_im = warped[:,:,c]
+            cur_im[add_mask] = temp_im[add_mask]
+            pano[:,:,c] = cur_im
+
+
+        prev_transfrom = T.dot(H)
+
+        cv2.imshow('result{}_{}_pano'.format(idx, idx+1), pano)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    cv2.imwrite(panoFileName, pano)
 
 
 if __name__ == '__main__':
