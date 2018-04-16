@@ -14,20 +14,19 @@ def findHomography(srcPoints, dstPoints):
     H = np.array([
         [1,2,3],
         [4,5,6],
-        [7,8,9]
-    ])
+        [7,8,1]
+    ], dtype=np.float)
 
     #print(srcPoints[0][0][0])
 
-    x1 = Symbol('x')
-    x2 = Symbol('y')
-    x3 = Symbol('z')
-    x4 = Symbol('a')
-    x5 = Symbol('b')
-    x6 = Symbol('c')
-    x7 = Symbol('d')
-    x8 = Symbol('e')
-
+    x = Symbol('0')
+    y = Symbol('1')
+    z = Symbol('2')
+    a = Symbol('3')
+    b = Symbol('4')
+    c = Symbol('5')
+    d = Symbol('6')
+    e = Symbol('7')
 
     f1 = None
     f2 = None
@@ -40,9 +39,20 @@ def findHomography(srcPoints, dstPoints):
 
     funcs = [f0, f1, f2, f3, f4, f5, f6, f7]
     for j in range(4):
-        for i in range(4):
-            funcs[i*2] = srcPoints[j][0][0]*x1 + srcPoints[j][0][1] + z - srcPoints[j][0][0]*dstPoints[j][0][0]*d +
+        funcs[j*2] = srcPoints[j][0]*x + srcPoints[j][1]*y + z - srcPoints[j][0]*dstPoints[j][0]*d - dstPoints[j][0]*srcPoints[j][1]*e - dstPoints[j][0]
+        funcs[j*2+1] = srcPoints[j][0]*a + srcPoints[j][1]*b + c - srcPoints[j][0]*dstPoints[j][1]*d - dstPoints[j][1]*srcPoints[j][1]*e - dstPoints[j][1]
 
+    sol = solve(funcs, x, y, z, a, b, c, d, e)
+    print(sol)
+
+    H[0, 0] = sol[x].evalf()
+    H[0, 1] = sol[y].evalf()
+    H[0, 2] = sol[z].evalf()
+    H[1, 0] = sol[a].evalf()
+    H[1, 1] = sol[b].evalf()
+    H[1, 2] = sol[c].evalf()
+    H[2, 0] = sol[d].evalf()
+    H[2, 1] = sol[e].evalf()
 
     return H
 
@@ -59,3 +69,22 @@ def findHomographyRANSAC(srcPoints, dstPoints):
         # calculate error
 
     return H
+
+
+
+if __name__ == '__main__':
+    srcPoints = np.array([
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [0, 1]
+    ])
+
+    dstPints = np.array([
+        [2, 1],
+        [4, 1],
+        [3, 2],
+        [2, 2]
+    ])
+
+    print(findHomography(srcPoints, dstPints))
