@@ -59,17 +59,35 @@ def findHomography(srcPoints, dstPoints):
 
 def findHomographyRANSAC(srcPoints, dstPoints):
 
-    ITER_NUM = 500
+    ITER_NUM = 10
+    bestH = None
+    bestErr = np.inf
+
     for x in range(ITER_NUM):
-        random_idxs = [4, 6, 3, 19]
-        four_src_points = srcPoints[random_idxs]
-        four_dst_points = dstPoints[random_idxs]
-        H = findHomography(four_src_points, four_dst_points)
+        maybe_idxs, test_idxs = random_partition(4, len(srcPoints))
+        H = findHomography(srcPoints[maybe_idxs], dstPoints[maybe_idxs])
+        testErr = np.mean(computeError(H, srcPoints[test_idxs], dstPoints[test_idxs]))
+        if testErr < bestErr:
+            bestH = H
+            bestErr = testErr
 
-        # calculate error
+    return bestH
 
-    return H
 
+def computeError(H, pt1, pt2):
+    match_pt2 = pt2.T
+    transformed_pt1 = H.dot(np.concatenate([pt1.T, np.ones([1, pt1.shape[0]])], axis=0))
+    transformed_pt1 = (transformed_pt1 / transformed_pt1[2])[:2,]
+    dists = np.linalg.norm((transformed_pt1 - match_pt2), axis=0).T
+    return dists
+
+
+def random_partition(k, pts_size):
+    all_idxs = np.arange(pts_size)
+    np.random.shuffle(all_idxs)
+    idxs1 = all_idxs[:k]
+    idxs2 = all_idxs[k:]
+    return idxs1, idxs2
 
 
 if __name__ == '__main__':
