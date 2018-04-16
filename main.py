@@ -42,7 +42,7 @@ def main():
         src_pts = np.float32([PointInImg[idx+1][m[1]].pt for m in M]).reshape(-1, 1, 2)
 
         H, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-        # H = func.findHomography(src_pts, dst_pts)
+        # H = func.findHomographyRANSAC(src_pts, dst_pts)
         wrap = cv2.warpPerspective(Images[idx+1], H, (Images[idx+1].shape[1]+Images[idx+1].shape[1] , Images[idx+1].shape[0]+Images[idx+1].shape[0]))
         # result = cv2.addWeighted(img1, 0.5, wrap, 0.5, 0)
         wrap[0:Images[idx+1].shape[0], 0:Images[idx+1].shape[1]] = Images[idx]
