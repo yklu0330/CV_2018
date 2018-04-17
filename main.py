@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import func
+import blending
 from SIFTMatcher import SIFTMatcher
 from glob import glob
 
@@ -86,6 +87,7 @@ def main():
 
     # Stitch images
     pano = cv2.warpPerspective(Images[0], T, new_size)
+    print('Pano size:', pano.shape)
     for idx in range(1, len(imgList)):
 
         H = Transform[idx]
@@ -94,16 +96,23 @@ def main():
         warped_mask = cv2.warpPerspective(Images[idx], T.dot(H), new_size)
         warped = cv2.warpPerspective(Images[idx], T.dot(H), new_size, borderMode=cv2.BORDER_REFLECT)
 
-        # Blend image
-        # add_mask = np.sum(warped, axis=2) > np.sum(pano, axis=2)
-        # add_mask = add_mask & (np.sum(pano, axis=2) < 300)
+        # Do multiband blending
+        multibandblended = blending.MultibandBlending(pano, warped)
+
+        # Blend warped image with pano
         result_mask = np.sum(pano, axis=2) != 0
         temp_mask = np.sum(warped_mask, axis=2) != 0
+        blend_mask =  temp_mask & result_mask
         add_mask = temp_mask & (~result_mask)
+
+        # add_mask = np.sum(warped, axis=2) > np.sum(pano, axis=2)
+        # add_mask = add_mask & (np.sum(pano, axis=2) < 300)
         for c in range(pano.shape[2]):
             cur_im = pano[:,:,c]
             temp_im = warped[:,:,c]
+            blend_im = multibandblended[:,:,c]
             cur_im[add_mask] = temp_im[add_mask]
+            cur_im[blend_mask] = blend_im[blend_mask]
             pano[:,:,c] = cur_im
 
         # cv2.imshow('result{}_{}_pano'.format(idx, idx+1), pano)
