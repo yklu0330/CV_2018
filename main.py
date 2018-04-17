@@ -8,8 +8,8 @@ from glob import glob
 THRESHOLD = 0.7
 
 def main():
-    name = 'MelakwaLake'
-    imgList = glob('./data/{}*.png'.format(name))
+    name = 'View'
+    imgList = glob('./data/{}*.JPG'.format(name))
     panoFileName = './result/pano_{}.jpg'.format(name)
 
     # Read Images
@@ -105,9 +105,9 @@ def main():
             cur_im[add_mask] = temp_im[add_mask]
             pano[:,:,c] = cur_im
 
-        cv2.imshow('result{}_{}_pano'.format(idx, idx+1), pano)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow('result{}_{}_pano'.format(idx, idx+1), pano)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
     cv2.imwrite(panoFileName, pano)
 
