@@ -3,7 +3,7 @@ import numpy as np
 
 def MultibandBlending(A, B, mask):
 
-    BAND_NUM = 2
+    BAND_NUM = 3
 
     # generate Mask pyramid
     pyM = [mask]

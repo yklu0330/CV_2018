@@ -9,8 +9,8 @@ from glob import glob
 THRESHOLD = 0.7
 
 def main():
-    name = 'View'
-    imgList = glob('./data/{}*.JPG'.format(name))
+    name = 'Rainier'
+    imgList = glob('./data/{}*.png'.format(name))
     panoFileName = './result/pano_{}.jpg'.format(name)
 
     # Read Images
