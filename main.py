@@ -85,19 +85,20 @@ def main():
     new_size = (int(pano_corners[0].max()-pano_corners[0].min()), int(pano_corners[1].max()-pano_corners[1].min()))
 
     # Stitch images
-    pano = np.zeros((new_size[1], new_size[0], 3), np.uint8)
-    for idx in range(len(imgList)):
+    pano = cv2.warpPerspective(Images[0], T, new_size)
+    for idx in range(1, len(imgList)):
 
         H = Transform[idx]
 
         # Warp images
-        warped = cv2.warpPerspective(Images[idx], T.dot(H), new_size)
+        warped_mask = cv2.warpPerspective(Images[idx], T.dot(H), new_size)
+        warped = cv2.warpPerspective(Images[idx], T.dot(H), new_size, borderMode=cv2.BORDER_REFLECT)
 
         # Blend image
         # add_mask = np.sum(warped, axis=2) > np.sum(pano, axis=2)
         # add_mask = add_mask & (np.sum(pano, axis=2) < 300)
         result_mask = np.sum(pano, axis=2) != 0
-        temp_mask = np.sum(warped, axis=2) != 0
+        temp_mask = np.sum(warped_mask, axis=2) != 0
         add_mask = temp_mask & (~result_mask)
         for c in range(pano.shape[2]):
             cur_im = pano[:,:,c]
