@@ -1,17 +1,23 @@
 import cv2
 import numpy as np
 
-def MultibandBlending(A, B):
+def MultibandBlending(A, B, mask):
+
+    # generate Mask pyramid
+    pyM = [mask]
+    for i in range(5):
+        M = cv2.pyrDown(pyM[i])
+        pyM.append(M)
 
     # generate Gaussian pyramid for A
-    G = A.copy()
+    G = np.array(A.copy(), np.float64)
     gpA = [G]
     for i in range(6):
         G = cv2.pyrDown(G)
         gpA.append(G)
 
     # generate Gaussian pyramid for B
-    G = B.copy()
+    G = np.array(B.copy(), np.float64)
     gpB = [G]
     for i in range(6):
         G = cv2.pyrDown(G)
@@ -35,9 +41,10 @@ def MultibandBlending(A, B):
 
     # Now add left and right halves of images in each level
     LS = []
-    for la,lb in zip(lpA,lpB):
-        rows,cols,dpt = la.shape
-        ls = np.hstack((la[:,0:int(cols/2)], lb[:,int(cols/2):]))
+    for i,(la,lb) in enumerate(zip(lpA,lpB)):
+        ls = np.zeros(la.shape)
+        for c in range(la.shape[2]):
+            ls[:,:,c] = lb[:,:,c] * pyM[5-i] + la[:,:,c] * (1-pyM[5-i])
         LS.append(ls)
 
     # now reconstruct
@@ -47,4 +54,4 @@ def MultibandBlending(A, B):
         res = cv2.resize(ls_, (LS[i].shape[1], LS[i].shape[0]))
         ls_ = cv2.add(res, LS[i])
 
-    return ls_
+    return np.asarray(ls_, np.uint8)
