@@ -103,25 +103,9 @@ def main():
         # Do multiband blending
         pano = blending.MultibandBlending(pano, warped, mask)
 
-        # Blend warped image with pano
-        # result_mask = np.sum(pano, axis=2) > 300
-        # temp_mask = np.sum(warped_mask, axis=2) != 0
-        # blend_mask =  temp_mask & result_mask
-        # add_mask = temp_mask & (~result_mask)
-        #
-        # # add_mask = np.sum(warped, axis=2) > np.sum(pano, axis=2)
-        # # add_mask = add_mask & (np.sum(pano, axis=2) < 300)
-        # for c in range(pano.shape[2]):
-        #     cur_im = pano[:,:,c]
-        #     temp_im = warped[:,:,c]
-        #     blend_im = multibandblended[:,:,c]
-        #     cur_im[add_mask] = temp_im[add_mask]
-        #     cur_im[blend_mask] = blend_im[blend_mask]
-        #     pano[:,:,c] = cur_im
-
-        # cv2.imshow('result{}_{}_pano'.format(idx, idx+1), pano)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
+        cv2.imshow('result{}_{}_pano'.format(idx, idx+1), pano)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     cv2.imwrite(panoFileName, pano)
 

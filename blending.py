@@ -3,7 +3,7 @@ import numpy as np
 
 def MultibandBlending(A, B, mask):
 
-    BAND_NUM = 3
+    BAND_NUM = 6
 
     # generate Mask pyramid
     pyM = [mask]
@@ -51,4 +51,7 @@ def MultibandBlending(A, B, mask):
         res = cv2.resize(ls_, (LS[i].shape[1], LS[i].shape[0]))
         ls_ = cv2.add(res, LS[i])
 
-    return np.asarray(ls_, np.uint8)
+    # Normalize image and convert back to uint8
+    ls_ = cv2.convertScaleAbs(ls_)
+
+    return ls_
