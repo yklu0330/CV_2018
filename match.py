@@ -2,10 +2,8 @@ import cv2
 import numpy as np
 
 MIN_MATCH_COUNT = 10
-img1 = cv2.imread('data/Rainier1.png')          # queryImage
-img2 = cv2.imread('data/Rainier3.png')          # trainImage
 
-def SIFT():
+def show_match_image(img1, img2):
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
     # find the keypoints and descriptors with SIFT
@@ -40,15 +38,13 @@ def SIFT():
         # result = wrap[min_row:max_row,min_col:max_col,:]#去除黑色無用部分
         result = wrap
 
+        cv2.imshow('Match Result', matching)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
         return matching, result
 
 if __name__ == '__main__':
-    matching, result = SIFT()
-    cv2.imshow('img3.jpg',matching)
-    cv2.imshow('result.jpg',result)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    cv2.waitKey(1)
-    cv2.waitKey(1)
-    cv2.waitKey(1)
-    cv2.waitKey(1)
+    img1 = cv2.imread('data/Rainier1.png')  # queryImage
+    img2 = cv2.imread('data/Rainier3.png')  # trainImage
+    matching, result = show_match_image(img1, img2)

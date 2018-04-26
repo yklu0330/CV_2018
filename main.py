@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import func
+import match
 import blending
 from SIFTMatcher import SIFTMatcher
 from glob import glob
@@ -9,7 +10,7 @@ from glob import glob
 THRESHOLD = 0.7
 
 def main():
-    name = 'Room'
+    name = 'View'
     imgList = glob('./data/{}*.JPG'.format(name))
     panoFileName = './result/pano_{}.jpg'.format(name)
 
@@ -32,6 +33,10 @@ def main():
         f, d = sift.detectAndCompute(I, None)
         PointInImg.update({idx: f})
         Descriptor.update({idx: d})
+
+    # Show match result
+    if len(Images) > 1:
+        match.show_match_image(Images[0], Images[1])
 
     # Compute homography
     Transform = {0: np.identity(3)}
