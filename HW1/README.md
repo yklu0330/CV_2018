@@ -15,10 +15,11 @@
 
 ### Experimental results
 
+<div align=center>
 <img src="https://i.imgur.com/9rnCfGt.jpg" width=80%>
 <img src="https://i.imgur.com/DhGPAPz.jpg" width=80%>
 <img src="https://i.imgur.com/thIutOP.jpg" width=80%>
 <img src="https://i.imgur.com/ZYWyNVZ.jpg" width=80%>
-
+</div>
 
 
