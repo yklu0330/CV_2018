@@ -31,18 +31,7 @@ If the Min is less than threshold (second Min Euclidean distance), we store inde
 To figure out the relationship between two images, we have to find the corresponding points. By SIFT algorithm, we can easily get the corresponding points. Then we use RANSAC to try other samples many times, which can ensure that having the best inliers. After finishing feature detection and point matching, we estimate fundamental matrix using feature pairs in two images.
 
 The fundamental matrix F is defined by ![](http://latex.codecogs.com/gif.latex?x'^TFx=0).
-If \begin{equation*}
-x=
-\begin{bmatrix}
-u \\ v \\ 1
-\end{bmatrix}
-\end{equation*}and
-\begin{equation*}
-x'=
-\begin{bmatrix}
-x' \\ v' \\ 1
-\end{bmatrix}
-\end{equation*}
+If ![](http://latex.codecogs.com/gif.latex?x=u\ v\ 1$$^T)
 , we will get the following formula. By 8-point algorithm, calculate least squares solution using SVD on equations from 8 pairs of correspondences. Finally, we get the fundamental matrix of two images. Fundamental matrix maps from a point in one image to a line in the other image, which is the epipolar line.
 
 <div align=center>
@@ -58,7 +47,7 @@ x' \\ v' \\ 1
 ### Implementation procedure
 
 First, we use ![](http://latex.codecogs.com/gif.latex?E=K'^TFK) to evaluate the initial essential matrix. K is the intrinsic matrix of the two cameras.  F is the fundamental matrix that we have gotten. Then we use SVD twice. The first time we use SVD to get the initial U, D, V matrix. In order to satisfy the rank deficiency, we set ![](http://latex.codecogs.com/gif.latex?D_{33}) to be 0. After we use the new D to get our new essential matrix ![](http://latex.codecogs.com/gif.latex?(E=U*D*V'))![](http://latex.codecogs.com/gif.latex?(V'=V^T)), we do the SVD again and obtain the final U and V matrix. Next, we set two matrix
-
+$$
 \begin{equation*}
 Z=
 \begin{bmatrix}
@@ -75,7 +64,7 @@ W=
 0 & 0 & 1
 \end{bmatrix}
 \end{equation*}
-
+$$
 With these two matrix, we are able to estimate the R matrix (rotation matrix).
 
 ![](http://latex.codecogs.com/gif.latex?R'=UW^TV^T)
