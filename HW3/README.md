@@ -30,7 +30,7 @@ If the Min is less than threshold (second Min Euclidean distance), we store inde
 
 To figure out the relationship between two images, we have to find the corresponding points. By SIFT algorithm, we can easily get the corresponding points. Then we use RANSAC to try other samples many times, which can ensure that having the best inliers. After finishing feature detection and point matching, we estimate fundamental matrix using feature pairs in two images.
 
-The fundamental matrix F is defined by ![](http://latex.codecogs.com/gif.latex?x^TFx=0). If ![](http://latex.codecogs.com/gif.latex?x={[u\ v\ 1]}^T) and ![](http://latex.codecogs.com/gif.latex?x'={[u'\ v'\ 1]}^T), we will get the following formula. By 8-point algorithm, calculate least squares solution using SVD on equations from 8 pairs of correspondences. Finally, we get the fundamental matrix of two images. Fundamental matrix maps from a point in one image to a line in the other image, which is the epipolar line.
+The fundamental matrix F is defined by ![](http://latex.codecogs.com/gif.latex?x^TFx=0). If ![](http://latex.codecogs.com/gif.latex?x=\[u\ v\ 1\]^T) and ![](http://latex.codecogs.com/gif.latex?x'=\[u'\ v'\ 1\]^T), we will get the following formula. By 8-point algorithm, calculate least squares solution using SVD on equations from 8 pairs of correspondences. Finally, we get the fundamental matrix of two images. Fundamental matrix maps from a point in one image to a line in the other image, which is the epipolar line.
 
 <div align=center>
 <img src="https://i.imgur.com/mIjRMIF.jpg" width=60%>
