@@ -1,4 +1,2 @@
 # CV_2018
-Computer Vision course homework
-
-NCTU
+Computer Vision Course Homework, NCTU, 2018 Spring
