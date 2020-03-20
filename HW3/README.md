@@ -4,7 +4,9 @@ Structure from Motion (SfM) is an image technique for estimating three-dimens
 
 The goal of this assignment is to implement SfM from two input images. First, use SIFT to match the keypoints from input images, and use RANSAC to get the best matching points. Use the matching points to get the fundamental matrix and essential matrix, and transform an image to overlay it on the other image. Then, using triangulation to rebuild the 3D model, and map the texture to the mesh of the 3D structure. Finally, we can get a 3D structure from the original 2D images.
 
-![](https://i.imgur.com/KrT8HZ7.png)
+<div align=center>
+<img src="https://i.imgur.com/KrT8HZ7.jpg" width=70%>
+</div>
 
 ## SIFT Feature Matching
 
@@ -28,7 +30,7 @@ If the Min is less than threshold (second Min Euclidean distance), we store inde
 
 To figure out the relationship between two images, we have to find the corresponding points. By SIFT algorithm, we can easily get the corresponding points. Then we use RANSAC to try other samples many times, which can ensure that having the best inliers. After finishing feature detection and point matching, we estimate fundamental matrix using feature pairs in two images.
 
-The fundamental matrix F is defined by ![](http://latex.codecogs.com/gif.latex?x^TFx=0). If ![](http://latex.codecogs.com/gif.latex?x=[u\ v\ 1]^T) and ![](http://latex.codecogs.com/gif.latex?x'=[u'\ v'\ 1]^T), we will get the following formula. By 8-point algorithm, calculate least squares solution using SVD on equations from 8 pairs of correspondences. Finally, we get the fundamental matrix of two images. Fundamental matrix maps from a point in one image to a line in the other image, which is the epipolar line.
+The fundamental matrix F is defined by ![](http://latex.codecogs.com/gif.latex?x^TFx=0). If ![](http://latex.codecogs.com/gif.latex?x={[u\ v\ 1]}^T) and ![](http://latex.codecogs.com/gif.latex?x'={[u'\ v'\ 1]}^T), we will get the following formula. By 8-point algorithm, calculate least squares solution using SVD on equations from 8 pairs of correspondences. Finally, we get the fundamental matrix of two images. Fundamental matrix maps from a point in one image to a line in the other image, which is the epipolar line.
 
 <div align=center>
 <img src="https://i.imgur.com/mIjRMIF.jpg" width=60%>
