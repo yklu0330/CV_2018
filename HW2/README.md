@@ -85,9 +85,4 @@ First, since the way to get Homography matrix is not fast enough, we choose the 
 ## Conclusion
 Although we already use RANSAC to find the most correct homography matrix, sometimes it still has some flaw. We still need to work on it.
 
-## Work assignment plan between team members
-
-0416025 呂翊愷: RANSAC, Homography
-0416061 陳則佑: image blending
-0416081 趙賀笙: SIFT, image blending with mask  
 
