@@ -87,7 +87,7 @@ Although we already use RANSAC to find the most correct homography matrix, somet
 
 ## Work assignment plan between team members
 
-0416025 呂翊愷: RANSAC, image blending  
-0416061 陳則佑: Homography  
+0416025 呂翊愷: RANSAC, Homography
+0416061 陳則佑: image blending
 0416081 趙賀笙: SIFT, image blending with mask  
 
